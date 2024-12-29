@@ -10,17 +10,16 @@ const LoginPage = () => {
   const [adjustedMargin, setAdjustedMargin] = useState(85);
   const navigate = useNavigate();
 
-  // 카카오 로그인
   const loginKakao = () => {
     window.location.href = process.env.REACT_APP_KAKAO_AUTH_URL;
   };
 
   useEffect(() => {
-    const totalHeight = document.body.scrollHeight; // 콘텐츠의 총 높이
-    const windowHeight = window.innerHeight; // 기기의 화면 높이
+    const totalHeight = document.body.scrollHeight;
+    const windowHeight = window.innerHeight;
     if (totalHeight > windowHeight) {
       const marginAdjustment = totalHeight - windowHeight;
-      setAdjustedMargin(85 - marginAdjustment); // 화면이 짧으면 margin을 조정
+      setAdjustedMargin(85 - marginAdjustment);
     }
   }, []);
 
@@ -60,7 +59,6 @@ const LoginPage = () => {
 
 export default LoginPage;
 
-// 스타일 코드는 그대로 유지
 const Container = styled.div`
   display: flex;
   flex-direction: column;

@@ -1,17 +1,17 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-const PremiumModal = ({ setModal, goPremium }) => {
+const TodoDelModal = ({ setModal, goDelete }) => {
   const toggleModal = () => {
     setModal(false);
   };
 
-  const handleSignup = async () => {
+  const handleDelete = async () => {
     try {
-      await goPremium();
+      await goDelete();
       toggleModal();
     } catch (error) {
-      console.error("업그레이드 오류:", error);
+      console.error("탈퇴 오류:", error);
     }
   };
 
@@ -19,16 +19,23 @@ const PremiumModal = ({ setModal, goPremium }) => {
     <Wrapper>
       <ModalBackground onClick={toggleModal} />
       <ModalWrapper>
-        <ModalTop>업그레이드하기</ModalTop>
+        <ModalTop>할 일 삭제하기</ModalTop>
         <ModalDiv>
-          <p>
-            플랜 업그레이드를 <br />
-            하시겠습니까?
+          <p>할 일을 삭제하시겠습니까?</p>
+          <p
+            style={{
+              color: "#928D8D",
+              fontSize: "10px",
+              margin: "0",
+              paddingBottom: "20px",
+              paddingTop: "6px",
+            }}
+          >
+            삭제된 할 일은 되돌릴 수 없습니다.
           </p>
-
           <Button>
             <NoBtn onClick={toggleModal}>아니오</NoBtn>
-            <YesBtn onClick={handleSignup}>예</YesBtn>
+            <YesBtn onClick={handleDelete}>예</YesBtn>
           </Button>
         </ModalDiv>
       </ModalWrapper>
@@ -36,7 +43,7 @@ const PremiumModal = ({ setModal, goPremium }) => {
   );
 };
 
-export default PremiumModal;
+export default TodoDelModal;
 
 const Wrapper = styled.div`
   display: flex;
@@ -45,7 +52,9 @@ const Wrapper = styled.div`
   position: fixed;
   width: 100%;
   height: 100vh;
-  z-index: 51;
+  z-index: 1000;
+  top: 0;
+  left: 0;
 `;
 
 const ModalBackground = styled.div`
@@ -53,7 +62,9 @@ const ModalBackground = styled.div`
   width: 100%;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.55);
-  z-index: 9;
+  z-index: 999;
+  top: 0;
+  left: 0;
 `;
 
 const ModalWrapper = styled.div`
@@ -63,7 +74,7 @@ const ModalWrapper = styled.div`
   border-radius: 10px;
   background: #fff;
   position: relative;
-  z-index: 10;
+  z-index: 1001;
 `;
 
 const ModalTop = styled.div`
@@ -73,7 +84,7 @@ const ModalTop = styled.div`
   height: 52px;
   position: absolute;
   top: 0;
-  z-index: 11;
+  z-index: 1002;
   color: #fff;
   text-align: center;
   font-family: Pretendard;
@@ -95,8 +106,7 @@ const ModalDiv = styled.div`
   font-weight: 500;
   text-align: center;
   p {
-    margin-bottom: 18px;
-    line-height: 150%;
+    margin-bottom: 0;
   }
 `;
 

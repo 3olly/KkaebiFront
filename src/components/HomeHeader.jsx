@@ -26,11 +26,11 @@ const HomeHeader = ({ title }) => {
   };
 
   const closeModal = () => {
-    setIsClosing(true); // 닫힘 상태로 설정
+    setIsClosing(true);
     setTimeout(() => {
-      setIsClosing(false); // 닫힘 상태 초기화
-      setModalOpen(false); // 모달을 DOM에서 제거
-    }, 300); // 애니메이션 지속 시간 (0.3초)
+      setIsClosing(false);
+      setModalOpen(false);
+    }, 300);
   };
 
   const goToPage = (url) => {
@@ -43,7 +43,6 @@ const HomeHeader = ({ title }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      // 현재 스크롤 위치를 확인하고 상태를 업데이트
       if (window.scrollY > 50) {
         setIsScrolled(true);
       } else {
@@ -70,49 +69,58 @@ const HomeHeader = ({ title }) => {
           />
           <Hamburger src={Menu} alt="hamburger menu" onClick={openModal} />
           {isModalOpen && (
-            <Modal $isClosing={isClosing}>
-              <ModalContainer>
-                <ModalHeader>
-                  <CloseButton
-                    src={X}
-                    alt="close button"
-                    onClick={closeModal}
-                  />
-                </ModalHeader>
-                <MenuName>메뉴</MenuName>
-                <MenuList>
-                  <li onClick={() => goToPage("/homemain")}>
-                    <StyledHomeIcon src={HomeIcon} alt="홈아이콘" />홈
-                  </li>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="233"
-                    height="2"
-                    viewBox="0 0 233 2"
-                    fill="none"
-                  >
-                    <path d="M0 0.981445H233" stroke="#F4F4F4" />
-                  </svg>
-                  <li onClick={() => goToPage("/month")}>
-                    <StyledCalendarIcon src={CalendarIcon} alt="캘린더아이콘" />
-                    캘린더
-                  </li>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="233"
-                    height="2"
-                    viewBox="0 0 233 2"
-                    fill="none"
-                  >
-                    <path d="M0 0.981445H233" stroke="#F4F4F4" />
-                  </svg>
-                  <li onClick={() => goToPage("/mypage")}>
-                    <StyledMyPageIcon src={MyPageIcon} alt="마이페이지아이콘" />
-                    마이페이지
-                  </li>
-                </MenuList>
-              </ModalContainer>
-            </Modal>
+            <>
+              <Overlay onClick={closeModal} />
+              <Modal $isClosing={isClosing}>
+                <ModalContainer>
+                  <ModalHeader>
+                    <CloseButton
+                      src={X}
+                      alt="close button"
+                      onClick={closeModal}
+                    />
+                  </ModalHeader>
+                  <MenuName>메뉴</MenuName>
+                  <MenuList>
+                    <li onClick={() => goToPage("/homemain")}>
+                      <StyledHomeIcon src={HomeIcon} alt="홈아이콘" />홈
+                    </li>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="233"
+                      height="2"
+                      viewBox="0 0 233 2"
+                      fill="none"
+                    >
+                      <path d="M0 0.981445H233" stroke="#F4F4F4" />
+                    </svg>
+                    <li onClick={() => goToPage("/month")}>
+                      <StyledCalendarIcon
+                        src={CalendarIcon}
+                        alt="캘린더아이콘"
+                      />
+                      캘린더
+                    </li>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="233"
+                      height="2"
+                      viewBox="0 0 233 2"
+                      fill="none"
+                    >
+                      <path d="M0 0.981445H233" stroke="#F4F4F4" />
+                    </svg>
+                    <li onClick={() => goToPage("/mypage")}>
+                      <StyledMyPageIcon
+                        src={MyPageIcon}
+                        alt="마이페이지아이콘"
+                      />
+                      마이페이지
+                    </li>
+                  </MenuList>
+                </ModalContainer>
+              </Modal>
+            </>
           )}
         </BtnContainer>
       </Container>
@@ -145,7 +153,6 @@ const Container = styled.div`
   padding: 20px;
   background-color: #aa91e8;
 
-  // 스크롤 상태에 따라 border-radius 동적 적용
   border-radius: ${({ isScrolled }) =>
     isScrolled ? "0px 0px 21px 21px" : "0px"};
 
@@ -192,6 +199,16 @@ const Name = styled.div`
   letter-spacing: -0.5px;
 `;
 
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+`;
+
 const Modal = styled.div`
   position: absolute;
   top: 0;
@@ -206,7 +223,7 @@ const Modal = styled.div`
 
   clip-path: ${({ isClosing }) =>
     isClosing ? "inset(0% 0% 0% 100%)" : "inset(0% 0% 0% 0%)"};
-  z-index: 10;
+  z-index: 1000;
 
   @keyframes slideIn {
     from {

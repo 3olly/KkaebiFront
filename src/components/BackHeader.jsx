@@ -7,7 +7,6 @@ import instance from "axios";
 const Header = ({ title, pageurl, houseworkId }) => {
   const navigate = useNavigate();
 
-  // DELETE 요청을 처리하는 함수
   const handleDelete = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -21,21 +20,22 @@ const Header = ({ title, pageurl, houseworkId }) => {
       );
       if (response.status === 200) {
         console.log("DELETE 성공:", response.data);
-        navigate(pageurl); // DELETE 성공 후 페이지 이동
+        navigate(pageurl);
       } else {
         console.error("DELETE 요청 실패:", response.status);
+        navigate(pageurl);
       }
     } catch (error) {
       console.error("DELETE 요청 중 에러 발생:", error);
+      navigate(pageurl);
     }
   };
 
-  // Back 버튼 클릭 핸들러
   const handleBackClick = () => {
     if (houseworkId) {
-      handleDelete(); // houseworkId가 있으면 DELETE 요청
+      handleDelete();
     } else {
-      navigate(pageurl); // 없으면 기존 페이지 이동
+      navigate(pageurl);
     }
   };
 
@@ -43,11 +43,7 @@ const Header = ({ title, pageurl, houseworkId }) => {
     <>
       <GlobalStyle />
       <Container>
-        <BackBtn
-          src={LeftArrow}
-          alt="Back Btn"
-          onClick={handleBackClick} // 조건부 동작 추가
-        />
+        <BackBtn src={LeftArrow} alt="Back Btn" onClick={handleBackClick} />
         <Name>{title}</Name>
       </Container>
     </>

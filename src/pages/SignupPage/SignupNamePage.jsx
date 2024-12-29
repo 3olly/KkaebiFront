@@ -53,7 +53,7 @@ const SignupNamePage = () => {
       );
 
       console.log(response.data);
-      navigate("/signupcodeinput"); // 성공 시 다음 페이지로 이동
+      navigate("/signupcodeinput");
     } catch (error) {
       console.error("API 요청 에러:", error);
       setError("서버 요청 중 오류가 발생했습니다. 다시 시도해주세요.");
@@ -124,8 +124,8 @@ const Container = styled.div`
   justify-content: space-between;
   padding: 0 20px;
   background-color: #fafafa;
-  height: calc(100vh - 132px); /* Header 패딩과 NextBtn 마진 포함 */
-  overflow: hidden; /* 스크롤 숨기기 */
+  height: calc(100vh - 132px);
+  overflow: hidden;
   padding-bottom: 74px;
 `;
 
@@ -190,7 +190,7 @@ const Input = styled.input`
 
   &:focus {
     border: 0.5px solid #000;
-    outline: none; /* 기본 포커스 효과 제거 */
+    outline: none;
   }
 `;
 

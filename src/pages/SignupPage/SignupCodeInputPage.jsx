@@ -10,24 +10,22 @@ const SignupCodeInputPage = () => {
   const navigate = useNavigate();
   const [code, setCode] = useState(["", "", "", ""]);
   const [isButtonActive, setIsButtonActive] = useState(false);
-  const [error, setError] = useState(""); // 에러 메시지 상태
-  const [loading, setLoading] = useState(false); // 로딩 상태
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const inputsRef = useRef([]);
 
   const handleInputChange = (index, value) => {
-    if (value.length > 1) return; // 한 칸 당 한 글자만 입력 가능
+    if (value.length > 1) return;
     const newCode = [...code];
     newCode[index] = value;
     setCode(newCode);
 
-    // 자동 포커스 이동
     if (value && index < 3) {
       inputsRef.current[index + 1].focus();
     }
 
-    // 버튼 활성화 조건 확인
     setIsButtonActive(newCode.every((char) => char !== ""));
-    setError(""); // 에러 메시지 초기화
+    setError("");
   };
 
   const handleKeyDown = (index, e) => {
@@ -38,11 +36,11 @@ const SignupCodeInputPage = () => {
 
   const handleSubmit = async () => {
     const token = localStorage.getItem("token");
-    const fullCode = code.join(""); // 입력된 코드 합치기
+    const fullCode = code.join("");
     if (!isButtonActive || loading) return;
 
     setLoading(true);
-    setError(""); // 에러 초기화
+    setError("");
     try {
       const response = await fetch(
         `${process.env.REACT_APP_SERVER_PORT}user/house/`,
@@ -65,17 +63,17 @@ const SignupCodeInputPage = () => {
       } else {
         const errorData = await response.json();
         console.error("API 실패:", errorData);
-        setError("코드를 찾을 수 없어요."); // 에러 메시지 설정
-        setIsButtonActive(false); // 버튼 비활성화
-        setCode(["", "", "", ""]); // 입력값 초기화
-        inputsRef.current[0]?.focus(); // 첫 번째 입력창으로 포커스 이동
+        setError("코드를 찾을 수 없어요.");
+        setIsButtonActive(false);
+        setCode(["", "", "", ""]);
+        inputsRef.current[0]?.focus();
       }
     } catch (error) {
       console.error("API 요청 중 오류 발생:", error);
-      setError("코드를 찾을 수 없어요."); // 에러 메시지 설정
-      setIsButtonActive(false); // 버튼 비활성화
-      setCode(["", "", "", ""]); // 입력값 초기화
-      inputsRef.current[0]?.focus(); // 첫 번째 입력창으로 포커스 이동
+      setError("코드를 찾을 수 없어요.");
+      setIsButtonActive(false);
+      setCode(["", "", "", ""]);
+      inputsRef.current[0]?.focus();
     } finally {
       setLoading(false);
     }
@@ -151,7 +149,7 @@ const Container = styled.div`
   justify-content: space-between;
   padding: 0 20px;
   background-color: #fafafa;
-  height: calc(100vh - 132px); /* Header 패딩과 NextBtn 마진 포함 */
+  height: calc(100vh - 132px);
   overflow: hidden;
   padding-bottom: 74px;
 `;

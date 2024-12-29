@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import useHouseworkTagStore from "../stores/HouseworkTagStore";
+import instance from "../api/axios";
 
 import styled, { createGlobalStyle } from "styled-components";
 import userCharacter1Img from "../images/character/프사피부미인.svg";
@@ -7,6 +8,8 @@ import userCharacter2Img from "../images/character/프사머리숱부자.svg";
 import userCharacter3Img from "../images/character/프사핑크수집가.svg";
 import userCharacter4Img from "../images/character/프사고민해결사.svg";
 import userCharacter5Img from "../images/character/프사매듭의달인.svg";
+import TodoDelModal from "./TodoDelModal";
+import Delete from "../images/Delete.svg";
 
 const characterImages = {
   1: userCharacter1Img,
@@ -16,61 +19,115 @@ const characterImages = {
   5: userCharacter5Img,
 };
 const FamilyTodo = ({
-  houseworkID,
+  houseworkId,
   categoryName,
   houseworkPlace,
   houseworkDetail,
   houseworkDone,
   nickname,
   userCharacter,
+  isEditing,
+  updateTasks,
 }) => {
-  const [tagValue, setTagValue] = useState(""); // 초기값 빈 문자열
+  const [tagValue, setTagValue] = useState("");
   const houseworkTag = useHouseworkTagStore((state) => state.houseworkTag);
   useEffect(() => {
     if (houseworkTag[categoryName]) {
-      setTagValue(houseworkTag[categoryName]); // 유효한 태그 값 설정
+      setTagValue(houseworkTag[categoryName]);
     } else {
-      setTagValue("유효하지 않은 태그입니다."); // 유효하지 않은 태그 처리
+      setTagValue("유효하지 않은 태그입니다.");
     }
   }, [categoryName, houseworkTag]);
 
+  const goDelete = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await instance.delete(
+        `${process.env.REACT_APP_SERVER_PORT}housework/delete/${houseworkId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        console.log("DELETE 성공:", response.data);
+        console.log(`Deleting houseworkId: ${houseworkId}`);
+        setModal(false);
+        updateTasks();
+      } else {
+        console.error("DELETE 요청 실패:", response.status);
+      }
+    } catch (error) {
+      console.error("DELETE 요청 중 에러 발생:", error);
+    }
+  };
+
+  const [modal, setModal] = useState(false);
+  const openModal = () => {
+    setModal(true);
+  };
+
   return (
-    <Container>
-      <GlobalStyle />
-      <Img src={characterImages[userCharacter]} alt="프로필사진" />
-      <Wrapper>
-        <NameWrapper>
-          <Name>{nickname}</Name>
-          <FinishBtn houseworkDone={houseworkDone}>
-            {houseworkDone ? "완료" : "미완료"}
-          </FinishBtn>
-        </NameWrapper>
-        <CategoryWrapper>
-          <Category>{tagValue}</Category>
-          {/* houseworkPlace와 houseworkDetail 값이 "미정"이 아닌 경우만 렌더링 */}
-          {houseworkPlace !== "미정" && <Category>{houseworkPlace}</Category>}
-          {houseworkDetail !== "미정" && <Category>{houseworkDetail}</Category>}
-        </CategoryWrapper>
-      </Wrapper>
-    </Container>
+    <>
+      {" "}
+      {modal && <TodoDelModal setModal={setModal} goDelete={goDelete} />}
+      <Container>
+        <GlobalStyle />
+        <Wrapper1>
+          <Img src={characterImages[userCharacter]} alt="프로필사진" />
+          <Wrapper>
+            <NameWrapper>
+              <Name>{nickname}</Name>
+              <FinishBtn houseworkDone={houseworkDone}>
+                {houseworkDone ? "완료" : "미완료"}
+              </FinishBtn>
+            </NameWrapper>
+            <CategoryWrapper>
+              <Category>{tagValue}</Category>
+
+              {houseworkPlace !== "미정" && (
+                <Category>{houseworkPlace}</Category>
+              )}
+              {houseworkDetail !== "미정" && (
+                <Category>{houseworkDetail}</Category>
+              )}
+            </CategoryWrapper>
+          </Wrapper>
+        </Wrapper1>
+        {isEditing ? (
+          <DelImg src={Delete} alt="Delete" onClick={openModal} />
+        ) : null}
+      </Container>
+    </>
   );
 };
 
 export default FamilyTodo;
 
-// 스타일 정의
 const GlobalStyle = createGlobalStyle``;
+
+const Wrapper1 = styled.div`
+  display: flex;
+  gap: 16px;
+`;
 
 const Container = styled.div`
   display: flex;
   padding: 20px 24px;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   align-self: stretch;
   margin-top: 12px;
   border-radius: 11px;
   background: #fff;
   flex-direction: row;
+  justify-content: space-between;
+`;
+
+const DelImg = styled.img`
+  width: 24px;
+  cursor: pointer;
 `;
 
 const Category = styled.div`
@@ -132,24 +189,6 @@ const FinishBtn = styled.div`
   border-radius: 4px;
   background: ${({ houseworkDone }) =>
     houseworkDone ? "var(--key_purple, #aa91e8)" : "#bebebe"};
-  color: var(--white, #f2f2f2);
-  text-align: center;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-`;
-
-const NoFinishBtn = styled.div`
-  display: flex;
-  width: 50px;
-  height: 24px;
-  padding: 5px 0px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 4px;
-  background: #bebebe;
   color: var(--white, #f2f2f2);
   text-align: center;
   font-size: 12px;

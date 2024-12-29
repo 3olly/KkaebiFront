@@ -52,7 +52,7 @@ const SignupGenerateCodePage = () => {
           </CodeInput>
         </Top>
         <Bottom>
-          <NextBtn onClick={() => navigate("/signupcodeinput")}>다음</NextBtn>
+          <NextBtn onClick={() => navigate("/signupcharacter")}>다음</NextBtn>
         </Bottom>
       </Container>
     </>
@@ -84,7 +84,7 @@ const Container = styled.div`
   justify-content: space-between;
   padding: 0 20px;
   background-color: #fafafa;
-  height: calc(100vh - 132px); /* Header 패딩과 NextBtn 마진 포함 */
+  height: calc(100vh - 132px);
   overflow: hidden;
   padding-bottom: 74px;
 `;

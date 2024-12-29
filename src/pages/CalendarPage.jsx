@@ -17,7 +17,6 @@ const CalendarPage = () => {
   const navigate = useNavigate();
   const today = new Date();
 
-  // 월 변경 시 데이터 가져오기
   useEffect(() => {
     const fetchMonthData = async () => {
       const year = currentDate.getFullYear();
@@ -41,7 +40,10 @@ const CalendarPage = () => {
     fetchMonthData();
   }, [currentDate]);
 
-  // 오늘의 할 일 가져오기
+  useEffect(() => {
+    console.log("Month data changed:", monthData);
+  }, [monthData]);
+
   useEffect(() => {
     const fetchTodayTasks = async () => {
       const token = localStorage.getItem("token");
@@ -65,7 +67,7 @@ const CalendarPage = () => {
     };
 
     fetchTodayTasks();
-  }, []); // 오늘의 할 일은 컴포넌트가 처음 마운트될 때만 호출
+  }, []);
 
   const handlePrevMonth = () => {
     const newDate = new Date(
@@ -100,6 +102,16 @@ const CalendarPage = () => {
         ))}
       </DaysContainer>
     );
+  };
+
+  const getSortedTasks = (tasks) => {
+    return [...tasks].sort((a, b) => {
+      if (a.houseworkDone === b.houseworkDone) {
+        return 0;
+      }
+
+      return a.houseworkDone ? 1 : -1;
+    });
   };
 
   const renderDates = () => {
@@ -149,7 +161,7 @@ const CalendarPage = () => {
                 }
               >
                 {dateObj.date}
-                {dateObj.hasTask && <TaskIndicator />}
+                <TaskIndicator hasTask={dateObj.hasTask} />
               </DateBox>
             ))}
           </Week>
@@ -178,7 +190,7 @@ const CalendarPage = () => {
         {renderDates()}
         <MyTodoContainer>
           <Name>{`${today.getMonth() + 1}월 ${today.getDate()}일`}</Name>
-          {todayTasks.map((todo, index) => (
+          {getSortedTasks(todayTasks).map((todo, index) => (
             <MyTodo
               key={index}
               categoryName={todo.tag.tagid}
@@ -205,7 +217,6 @@ const Container = styled.div`
   height: calc(100vh - 132px);
   overflow-y: auto;
   padding-bottom: 74px;
-  min-width: 400px;
 `;
 
 const MyTodoContainer = styled.div`
@@ -251,7 +262,7 @@ const DaysContainer = styled.div`
 const Day = styled.div`
   flex: 1;
   text-align: center;
-  font-weight: bold;
+  font-weight: light;
   color: #555;
 `;
 
@@ -273,9 +284,10 @@ const DateBox = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
+  cursor: ${({ type }) =>
+    type === "prev" || type === "next" ? "default" : "pointer"};
   color: ${({ type }) =>
-    type === "prev" || type === "next" ? "#ccc" : "inherit"};
+    type === "prev" || type === "next" ? "#B3B3B3" : "#000"};
   position: relative;
   background: ${({ type, isToday }) =>
     type === "current" && isToday ? "var(--key_purple, #aa91e8)" : "none"};
@@ -283,9 +295,8 @@ const DateBox = styled.div`
     type === "current" && isToday ? "100%" : "none"};
   color: ${({ type, isToday }) =>
     type === "current" && isToday ? "white" : "inherit"};
-
+  opacity: ${({ type }) => (type === "prev" || type === "next" ? 0.3 : 1)};
   & > .task-indicator {
-    /* TaskIndicator를 직접 다루기 위한 클래스 */
     width: 7px;
     height: 7px;
     background: #aa91e8;
@@ -294,9 +305,28 @@ const DateBox = styled.div`
     position: absolute;
     top: 20px;
   }
+
+  &::before > .today-indicator {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px; // 고정된 원의 너비
+    height: 32px; // 고정된 원의 높이
+    background-color: #aa91e8;
+    border-radius: 50%;
+    z-index: -1;
+  }
 `;
 
-const TaskIndicator = () => <div className="task-indicator" />;
+const TodayIndicator = ({ isToday }) => {
+  return isToday ? <div className="today-indicator" /> : null;
+};
+
+const TaskIndicator = ({ hasTask }) => {
+  return hasTask ? <div className="task-indicator" /> : null;
+};
 
 const Name = styled.div`
   color: #000;

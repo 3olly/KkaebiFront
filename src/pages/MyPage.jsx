@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import useLevelStore from "../stores/LevelStore"; // zustand store
+import useLevelStore from "../stores/LevelStore";
 import { useNavigate } from "react-router-dom";
 
 import GlobalStyle from "../style/GlobalStyle";
@@ -62,9 +62,9 @@ const MyPage = () => {
     setCharacterImg,
   } = useLevelStore();
 
-  const [nickname, setNickname] = useState(""); // 닉네임 상태 추가
+  const [nickname, setNickname] = useState("");
 
-  const [imageNumber, setImageNumber] = useState(null); // API에서 받은 이미지 번호
+  const [imageNumber, setImageNumber] = useState(null);
   const [userLevel, setUserLevel] = useState("");
   const fetchImageNumber = async () => {
     try {
@@ -80,7 +80,7 @@ const MyPage = () => {
 
       if (response.status === 200) {
         console.log("API 요청 성공:", response.data);
-        setImageNumber(response.data.userCharacter); // 서버에서 받은 번호 저장
+        setImageNumber(response.data.userCharacter);
         setNickname(response.data.nickname);
       } else {
         console.error("API 요청 실패:", response.status);
@@ -91,11 +91,10 @@ const MyPage = () => {
   };
 
   useEffect(() => {
-    fetchImageNumber(); // 컴포넌트 마운트 시 API 요청 실행
+    fetchImageNumber();
   }, []);
 
   useEffect(() => {
-    // 홈 데이터 요청
     fetch(`${process.env.REACT_APP_SERVER_PORT}home/`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -105,9 +104,8 @@ const MyPage = () => {
       .then((res) => res.json())
       .then((data) => {
         const { level, weekly_completion_rate } = data.tasks;
-        setUserLevel(level); // 사용자 레벨 저장
+        setUserLevel(level);
 
-        // 레벨에 맞게 activeLevel 설정
         const levelMap = {
           "Lv7. 빛": 7,
           "Lv6. 청소 마법사": 6,
@@ -126,7 +124,7 @@ const MyPage = () => {
   }, [token, setCompletionRate, setActiveLevel, setCharacterImg]);
 
   const [modal, setModal] = useState(false);
-  // 모달창의 state를 바꾸는 함수 작성 (true <-> false)
+
   const openModal = () => {
     setModal(true);
   };
@@ -182,7 +180,6 @@ const MyPage = () => {
             </ProfileInfo>
           </ProfileContainer>
 
-          {/* 레벨 진행도 바 */}
           <LevelContainer>
             <TopContainer>
               <img src={Ranking} alt="Ranking" />
@@ -234,7 +231,6 @@ const MyPage = () => {
           </LevelContainer>
         </Top>
 
-        {/* 하단 버튼 영역 */}
         <Bottom>
           <ButtonContainer>
             <ActionButton onClick={() => navigate("/family")}>
@@ -291,7 +287,7 @@ const ProfileContainer = styled.div`
 
 const ProfileImage = styled.img`
   position: absolute;
-  top: 10px; /* ProgressItem 위에 표시 */
+  top: 10px;
   left: 50%;
   transform: translateX(-50%);
   visibility: ${(props) => (props.active ? "visible" : "hidden")};
@@ -367,8 +363,7 @@ const ProgressItem = styled.div`
   height: 45px;
   width: 100%;
   box-shadow: 0px 2px 1px 0px rgba(0, 0, 0, 0.25);
-  background-color: ${(props) =>
-    props.isActive ? "#AA91E8" : "#f5f5f6"}; /* activeLevel만 보라색 */
+  background-color: ${(props) => (props.isActive ? "#AA91E8" : "#f5f5f6")};
   position: relative;
 `;
 
@@ -386,7 +381,7 @@ const ActionButton = styled.div`
   padding: 20px;
   justify-content: space-between;
   align-items: center;
-  align-self: stretch; /* 부모 컨테이너의 너비를 상속 */
+  align-self: stretch;
   border-radius: 11px;
   background: #fff;
   border: none;

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import instance from "axios";
 import GlobalStyle from "../style/GlobalStyle";
 import BackHeader from "../components/BackHeader";
-import { useFamilyStore } from "../stores/FamilyStore";
+
 import Copy from "../images/Copy.svg";
 import Delete from "../images/Delete.svg";
 import userCharacter1Img from "../images/character/프사피부미인.svg";
@@ -40,7 +40,7 @@ const FamilyPage = () => {
           }
         );
         const familyData = response.data.housemembers
-          .filter((member) => member.userid != currentUserId) // 현재 사용자 제외
+          .filter((member) => member.userid != currentUserId)
           .map((member) => ({
             userid: member.userid,
             nickname: member.nickname,
@@ -57,7 +57,6 @@ const FamilyPage = () => {
     fetchFamilyProfiles();
   }, []);
 
-  // 멤버 삭제 핸들러
   const handleDelete = async (userid) => {
     try {
       const response = await instance.delete(
@@ -97,7 +96,6 @@ const FamilyPage = () => {
           <Code>
             <p>{housecode}</p>
             <img src={Copy} alt="Copy" onClick={handleCopyCode} />{" "}
-            {/* Copy 클릭 시 handleCopyCode 실행 */}
           </Code>
         </Top>
         <Top>
@@ -116,7 +114,7 @@ const FamilyPage = () => {
               <DeleteImg
                 src={Delete}
                 alt="삭제 버튼"
-                onClick={() => handleDelete(profile.userid)} // 삭제 버튼 클릭 시 handleDelete 실행
+                onClick={() => handleDelete(profile.userid)}
               />
             </Container2>
           ))}
@@ -133,10 +131,9 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 20px;
-  height: calc(100vh); /* Header 패딩과 NextBtn 마진 포함 */
-  overflow: hidden; /* 스크롤 숨기기 */
+  height: calc(100vh);
+  overflow: hidden;
   padding-bottom: 74px;
-  min-width: 390px;
 `;
 
 const Top = styled.div`
@@ -154,7 +151,7 @@ const Text = styled.div`
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
-  line-height: 24.5px; /* 122.5% */
+  line-height: 24.5px;
   letter-spacing: -0.5px;
 `;
 

@@ -9,7 +9,7 @@ import CategorySelector from "../../components/CategorySelector";
 import useHouseworkTagStore from "../../stores/HouseworkTagStore";
 
 const SignupBestWorkPage = () => {
-  const houseworkTag = useHouseworkTagStore((state) => state.houseworkTag); // Store에서 카테고리 가져오기
+  const houseworkTag = useHouseworkTagStore((state) => state.houseworkTag);
   const setSignupSelectedTag = useHouseworkTagStore(
     (state) => state.setSignupSelectedTag
   );
@@ -23,22 +23,19 @@ const SignupBestWorkPage = () => {
     );
 
     if (selectedCategories.includes(category)) {
-      // 이미 선택된 경우 -> 선택 해제
       const updatedCategories = selectedCategories.filter(
         (item) => item !== category
       );
       setSelectedCategories(updatedCategories);
       console.log("선택취소");
     } else {
-      // 새로운 선택 추가
       const updatedCategories = [...selectedCategories, category];
       setSelectedCategories(updatedCategories);
       console.log("선택된 tag:", tag);
     }
 
-    // Store 업데이트 (선택된 모든 태그의 ID를 배열로 설정)
     const updatedTags = [...selectedCategories, category]
-      .filter((cat, index, self) => self.indexOf(cat) === index) // 중복 제거
+      .filter((cat, index, self) => self.indexOf(cat) === index)
       .map((cat) =>
         Number(
           Object.keys(houseworkTag).find((key) => houseworkTag[key] === cat)

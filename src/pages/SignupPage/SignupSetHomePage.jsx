@@ -10,18 +10,18 @@ import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
 const SignupSetHomePage = () => {
   const navigate = useNavigate();
   const [inputValue, setInputValue] = useState("");
-  const [error, setError] = useState(""); // 오류 메시지
-  const [isButtonActive, setIsButtonActive] = useState(false); // 버튼 활성화 상태
-  const [loading, setLoading] = useState(false); // 로딩 상태
+  const [error, setError] = useState("");
+  const [isButtonActive, setIsButtonActive] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
     if (value.length > 8) {
-      setError("이름은 최대 8글자로 작성해주세요."); // 오류 메시지 설정
-      setIsButtonActive(false); // 버튼 비활성화
+      setError("이름은 최대 8글자로 작성해주세요.");
+      setIsButtonActive(false);
     } else {
-      setError(""); // 오류 메시지 초기화
-      setIsButtonActive(value.trim() !== ""); // 입력값이 유효할 때만 버튼 활성화
+      setError("");
+      setIsButtonActive(value.trim() !== "");
     }
     setInputValue(value);
   };
@@ -63,7 +63,7 @@ const SignupSetHomePage = () => {
     } catch (error) {
       console.error("Error:", error);
     } finally {
-      setLoading(false); // 로딩 종료
+      setLoading(false);
     }
   };
 
@@ -132,7 +132,7 @@ const Container = styled.div`
   justify-content: space-between;
   padding: 0 20px;
   background-color: #fafafa;
-  height: calc(100vh - 132px); /* Header 패딩과 NextBtn 마진 포함 */
+  height: calc(100vh - 132px);
   overflow: hidden;
   padding-bottom: 74px;
 `;
@@ -178,13 +178,11 @@ const InputBox = styled.div`
   box-sizing: border-box;
 
   @media (max-width: 320px) {
-    /* 가로 길이가 400px 이하일 때 */
-    width: calc(95% - 40px); /* padding 20px을 양쪽에서 제외한 너비 */
+    width: calc(95% - 40px);
   }
 
   @media (max-width: 300px) {
-    /* 더 작은 화면에서도 추가 조정 */
-    width: calc(95% - 60px); /* 추가적인 여백 확보 */
+    width: calc(95% - 60px);
   }
 `;
 

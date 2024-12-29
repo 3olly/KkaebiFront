@@ -22,7 +22,6 @@ export const useFamilyStore = create((set) => ({
     try {
       const token = localStorage.getItem("token");
 
-      // 1. /mypage/user/ 데이터 가져오기
       const userResponse = await instance.get(
         `${process.env.REACT_APP_SERVER_PORT}mypage/user/`,
         {
@@ -37,7 +36,6 @@ export const useFamilyStore = create((set) => ({
         characterImage: userResponse.data.userCharacter,
       };
 
-      // 2. /housework/manager/ 데이터 가져오기
       const managerResponse = await instance.get(
         `${process.env.REACT_APP_SERVER_PORT}housework/manager/`,
         {
@@ -55,14 +53,12 @@ export const useFamilyStore = create((set) => ({
       }));
       set({ familyProfiles: familyData });
 
-      // 3. 중복 제거 로직
       const allProfiles = [userData, ...familyData];
       const uniqueProfiles = allProfiles.filter(
         (profile, index, self) =>
           index === self.findIndex((p) => p.userid === profile.userid)
       );
 
-      // 4. 상태 업데이트
       set({ profiles: uniqueProfiles, error: null });
     } catch (error) {
       console.error("Error fetching profiles:", error);

@@ -5,20 +5,19 @@ import instance from "axios";
 
 import GlobalStyle from "../../style/GlobalStyle";
 import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
-import CategorySelector from "../../components/CategorySelector"; // 새 컴포넌트 경로
+import CategorySelector from "../../components/CategorySelector";
 import BackHeader from "../../components/BackHeader";
-import useHouseworkTagStore from "../../stores/HouseworkTagStore"; // Store 경로
+import useHouseworkTagStore from "../../stores/HouseworkTagStore";
 
 const MakeTodoPage = () => {
   const houseworkTag = useHouseworkTagStore((state) => state.houseworkTag);
   const [searchParams] = useSearchParams();
-  const [tagNumber, setTagNumber] = useState(null); // API에서 받은 태그 번호 저장
-  const [tagValue, setTagValue] = useState("");
+
   const setSelectedTag = useHouseworkTagStore((state) => state.setSelectedTag);
   const categories = Object.values(houseworkTag);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const navigate = useNavigate();
-  // URL에서 쿼리스트링으로 전달된 데이터를 가져옴
+
   const queryYear = searchParams.get("year");
   const queryMonth = searchParams.get("month");
   const queryDay = searchParams.get("date");
@@ -34,7 +33,7 @@ const MakeTodoPage = () => {
           `${process.env.REACT_APP_SERVER_PORT}housework/recommend-tag?date=${queryDate}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`, // 토큰 설정
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -48,7 +47,7 @@ const MakeTodoPage = () => {
             </>
           );
         } else {
-          setComment(""); // 기타 에러 처리
+          setComment("");
         }
       } catch (error) {
         // 에러 핸들링
@@ -63,7 +62,7 @@ const MakeTodoPage = () => {
         } else {
           alert("네트워크 오류가 발생했습니다. 다시 시도해주세요.");
         }
-        setComment(""); // 에러 발생 시 comment 초기화
+        setComment("");
       }
     };
 
@@ -77,10 +76,10 @@ const MakeTodoPage = () => {
 
     if (selectedCategory === category) {
       setSelectedCategory(null);
-      setSelectedTag(null); // 선택 해제 시 Store의 값도 초기화
+      setSelectedTag(null);
     } else {
       setSelectedCategory(category);
-      setSelectedTag(Number(tag)); // 선택한 Tag의 번호를 Store에 저장
+      setSelectedTag(Number(tag));
       console.log("선택된 tag:", tag);
     }
   };
@@ -110,7 +109,7 @@ const MakeTodoPage = () => {
           </Kkaebi>
           <CategorySelector
             categories={categories}
-            selectedCategories={selectedCategory ? [selectedCategory] : []} // 단일 선택에 맞게 수정
+            selectedCategories={selectedCategory ? [selectedCategory] : []}
             onToggle={toggleCategory}
           />
         </Top>

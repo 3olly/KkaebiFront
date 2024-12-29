@@ -41,6 +41,16 @@ const HomeMainPage = () => {
         if (response.ok) {
           const data = await response.json();
           console.log(data);
+
+          // house 값이 "No House"일 경우 다시 코드 입력 페이지 이동
+          if (data.house === "No House") {
+            alert(
+              "기존에 등록되어 있던 우리집에 접근이 제한되어, 다시 우리집 코드 입력 페이지로 이동합니다."
+            );
+            navigate("/signupcodeinput");
+            return; // 이후 로직 실행 방지
+          }
+
           setUserData(data);
         } else {
           console.error("Failed to fetch user data", response.status);
@@ -78,7 +88,7 @@ const HomeMainPage = () => {
   }, []);
 
   if (!userData || !familyData) {
-    return <div></div>; // 데이터 로드 전 로딩 상태
+    return <div></div>;
   }
 
   const { house, nickname, userCharacter, tasks, selected_tags } = userData;
@@ -157,7 +167,6 @@ const HomeMainPage = () => {
           {family.length > 0 ? (
             family.map((member, index) => (
               <FamilyItem key={index}>
-                {/* character 데이터를 사용하여 이미지를 출력 */}
                 <FamilyProfileImage
                   src={characterImages[member.userCharacter]}
                   alt="Family Character"

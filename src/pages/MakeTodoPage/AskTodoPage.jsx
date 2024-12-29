@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import GlobalStyle from "../../style/GlobalStyle";
-import SignupBackBtn from "../../images/SignupBackBtn.svg";
+
 import KkaebiProfileImg from "../../images/KkaebiProfile.svg";
 
 import empty1Img from "../../images/character/빈피부미인.svg";
@@ -12,12 +12,9 @@ import empty3Img from "../../images/character/빈핑크수집가.svg";
 import empty4Img from "../../images/character/빈고민해결사.svg";
 import empty5Img from "../../images/character/빈매듭의달인.svg";
 
-import { useFamilyStore } from "../../stores/FamilyStore";
 import BackHeader from "../../components/BackHeader";
 import useHouseworkTagStore from "../../stores/HouseworkTagStore";
 import instance from "axios";
-
-// URL에서 쿼리스트링으로 전달된 데이터를 가져옴
 
 const emptyImages = {
   1: empty1Img,
@@ -37,13 +34,11 @@ const AskTodoPage = () => {
   );
   const houseworkTag = useHouseworkTagStore((state) => state.houseworkTag);
   const selectedTag = useHouseworkTagStore((state) => state.selectedTag);
-  const setSelectedTag = useHouseworkTagStore((state) => state.setSelectedTag);
   const [tagValue, setTagValue] = useState("");
   const location = useLocation();
   const { selectedUser } = location.state || {};
-  const [selectedCharacter, setSelectedCharacter] = useState(0);
-  const { nickname, userid, characterImage } = selectedUser;
-  const fetchProfiles = useFamilyStore((state) => state.fetchProfiles);
+  const { nickname, characterImage } = selectedUser;
+  const houseworkId = useHouseworkTagStore((state) => state.houseworkId);
 
   const queryYear = searchParams.get("year");
   const queryMonth = searchParams.get("month");
@@ -51,15 +46,15 @@ const AskTodoPage = () => {
 
   console.log("selectedUser 값:", selectedUser);
   console.log("characterImage 값:", characterImage);
+  console.log("houseworkDetail", houseworkDetail);
 
   useEffect(() => {
-    // tagNumber가 변경될 때마다 store에서 value 찾기
     if (selectedTag && houseworkTag[selectedTag]) {
-      setTagValue(houseworkTag[selectedTag]); // 번호에 해당하는 value 저장
+      setTagValue(houseworkTag[selectedTag]);
     } else {
-      setTagValue("유효하지 않은 태그입니다."); // 유효하지 않은 번호 처리
+      setTagValue("유효하지 않은 태그입니다.");
     }
-  }, [selectedTag, houseworkTag]);
+  }, [selectedTag, houseworkTag, houseworkId]);
 
   if (!selectedUser) {
     return (
@@ -72,24 +67,20 @@ const AskTodoPage = () => {
 
   const houseworkDate = `${queryYear}-${queryMonth}-${queryDay}`;
   console.log("날짜:", houseworkDate);
-  // Zustand 상태 가져오기 (최적화)
 
   const handleConfirmClick = async () => {
-    const payload = {
-      houseworkPlace: houseworkPlace || "미정",
-      houseworkDetail: houseworkDetail || "미정",
-      houseworkDate: houseworkDate,
-      tag: selectedTag,
+    const putPayload = {
+      housework_manager: nickname,
+      houseworkId: houseworkId,
     };
 
-    console.log("POST 데이터:", payload);
-    console.log("유저 아이디:", userid);
-
     try {
+      console.log("PUT 데이터:", putPayload);
       const token = localStorage.getItem("token");
-      const response = await instance.post(
-        `${process.env.REACT_APP_SERVER_PORT}housework/posting/`,
-        payload,
+
+      const putResponse = await instance.put(
+        `${process.env.REACT_APP_SERVER_PORT}housework/manager/`,
+        putPayload,
         {
           headers: {
             "Content-Type": "application/json",
@@ -98,40 +89,12 @@ const AskTodoPage = () => {
         }
       );
 
-      if (response.status === 201) {
-        console.log("POST 성공", response.data);
+      if (putResponse.status === 200) {
+        console.log("Manager PUT 성공", putResponse.data);
 
-        const houseworkId = response.data.data.houseworkId;
-
-        // 두 번째 요청의 payload에 userid 포함
-        const putPayload = {
-          housework_manager: userid, // selectedUser의 userid 추가
-          houseworkId: houseworkId,
-        };
-
-        console.log("PUT 데이터:", putPayload);
-
-        // 두 번째 요청
-        const putResponse = await instance.put(
-          `${process.env.REACT_APP_SERVER_PORT}housework/manager/`,
-          putPayload,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (putResponse.status === 200) {
-          console.log("Manager PUT 성공", putResponse.data);
-
-          navigate("/month"); // 성공하면 월별 페이지로 이동
-        } else {
-          console.error("PUT 실패");
-        }
+        navigate("/month");
       } else {
-        console.error("POST 실패");
+        console.error("PUT 실패");
       }
     } catch (error) {
       console.error("에러 발생:", error);
@@ -171,7 +134,6 @@ const AskTodoPage = () => {
 
 export default AskTodoPage;
 
-// Styled Components
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -268,6 +230,6 @@ const TextInfo = styled.div`
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
-  line-height: 150%; /* 21px */
+  line-height: 150%;
   letter-spacing: -0.5px;
 `;

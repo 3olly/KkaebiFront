@@ -26,7 +26,6 @@ const SignupNamePage = () => {
   const startXRef = useRef(0);
   const translateXRef = useRef(0);
 
-  // 마우스를 사용해서 드래그 하는 경우
   const handleMouseDown = (e) => {
     setIsDragging(true);
     startXRef.current = e.clientX;
@@ -42,7 +41,6 @@ const SignupNamePage = () => {
     handleDragEnd();
   };
 
-  // 터치스크린을 이용해서 드래그하는 경우
   const handleTouchStart = (e) => {
     setIsDragging(true);
     startXRef.current = e.touches[0].clientX;
@@ -60,15 +58,13 @@ const SignupNamePage = () => {
 
   const handleDragEnd = () => {
     if (translateXRef.current > 50) {
-      // 왼쪽으로 스와이프
       setSelectedCharacter((prev) =>
         prev === 0 ? characters.length - 1 : prev - 1
       );
     } else if (translateXRef.current < -50) {
-      // 오른쪽으로 스와이프
       setSelectedCharacter((prev) => (prev + 1) % characters.length);
     }
-    translateXRef.current = 0; // 드래그 초기화
+    translateXRef.current = 0;
   };
 
   return (
@@ -186,7 +182,7 @@ const Container = styled.div`
   justify-content: space-between;
   padding: 0 20px;
   background-color: #fafafa;
-  height: calc(100vh - 132px); /* Header 패딩과 NextBtn 마진 포함 */
+  height: calc(100vh - 132px);
   overflow: hidden;
   padding-bottom: 74px;
 `;
@@ -234,7 +230,7 @@ const CarouselContainer = styled.div`
   }
   width: 100%;
   height: 300px;
-  user-select: none; /* 텍스트 선택 방지 */
+  user-select: none;
 `;
 
 const Character = styled.div`
@@ -242,7 +238,7 @@ const Character = styled.div`
 `;
 
 const CharacterImg = styled.img.attrs({
-  draggable: false, // 기본적으로 드래그를 막음
+  draggable: false,
 })`
   display: flex;
   padding: 0px 4.035px 9.043px 5px;

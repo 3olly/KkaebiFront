@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-// props로 받아올 모달창 상태 변경 함수 구조 분해 할당
 const Modal = ({ setModal, goExit }) => {
   const toggleModal = () => {
     setModal(false);
@@ -9,8 +8,8 @@ const Modal = ({ setModal, goExit }) => {
 
   const handleSignup = async () => {
     try {
-      await goExit(); // 회원가입 요청 실행
-      toggleModal(); // 모달 닫기
+      await goExit();
+      toggleModal();
     } catch (error) {
       console.error("탈퇴 오류:", error);
     }
@@ -53,15 +52,15 @@ const Wrapper = styled.div`
   position: fixed;
   width: 100%;
   height: 100vh;
-  z-index: 10; /* 헤더보다 위에 표시되도록 설정 */
+  z-index: 10;
 `;
 
 const ModalBackground = styled.div`
-  position: fixed; /* 화면 전체를 덮도록 고정 */
+  position: fixed;
   width: 100%;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.55);
-  z-index: 9; /* 모달창보다 뒤에 위치 */
+  z-index: 9;
 `;
 
 const ModalWrapper = styled.div`
@@ -71,7 +70,7 @@ const ModalWrapper = styled.div`
   border-radius: 10px;
   background: #fff;
   position: relative;
-  z-index: 10; /* ModalBackground보다 위에 표시되도록 설정 */
+  z-index: 10;
 `;
 
 const ModalTop = styled.div`
@@ -81,13 +80,13 @@ const ModalTop = styled.div`
   height: 52px;
   position: absolute;
   top: 0;
-  z-index: 11; /* ModalWrapper 내부에서 가장 위에 표시 */
+  z-index: 11;
   color: #fff;
   text-align: center;
   font-family: Pretendard;
   font-size: 18px;
   font-weight: 700;
-  line-height: 52px; /* 중앙 정렬 */
+  line-height: 52px;
 `;
 
 const ModalDiv = styled.div`

@@ -30,8 +30,8 @@ const HomeStatisticsPage = () => {
           const json = await response.json();
           setData({
             ...json,
-            distribution: json.distribution || [], // 분배 배열 기본값 설정
-            house_completion_rate: json.house_completion_rate || "0%", // 완료율 기본값 설정
+            distribution: json.distribution || [],
+            house_completion_rate: json.house_completion_rate || "0%",
           });
         } else {
           console.error("Failed to fetch statistics", response.status);
@@ -50,7 +50,6 @@ const HomeStatisticsPage = () => {
     return <div></div>;
   }
 
-  // 분배 배열이 비어있는 경우 처리
   if (
     !data ||
     data.house_completion_rate === "none" ||
@@ -203,7 +202,6 @@ const HomeStatisticsPage = () => {
           <PieChart>
             <svg width="200" height="200" viewBox="0 0 200 200">
               {slices.length === 1 ? (
-                // 유효한 멤버가 한 명일 경우 전체 원을 해당 색상으로 채움
                 <circle
                   cx="100" // 중심점 x 좌표
                   cy="100" // 중심점 y 좌표

@@ -33,7 +33,6 @@ const SignupKkaebiCommentPage = () => {
       navigate("/homemain");
     }, 3000);
 
-    // 컴포넌트가 언마운트될 때 타이머를 정리
     return () => clearTimeout(timer);
   }, [navigate]);
 
@@ -81,9 +80,8 @@ const Character = styled.img`
   max-height: 100vh;
   object-fit: contain;
 
-  /* 화면 세로 길이가 충분히 크면 하단 공백 방지 */
   @media (min-height: 800px) {
-    bottom: 0px; /* 화면이 길어질 때 하단 공백 최소화 */
+    bottom: 0px;
   }
 `;
 
