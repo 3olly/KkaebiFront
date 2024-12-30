@@ -160,7 +160,7 @@ const CalendarPage = () => {
                   dateObj.type === "current" && handleDateClick(dateObj.date)
                 }
               >
-                {dateObj.date}
+                <span>{dateObj.date}</span>
                 <TaskIndicator hasTask={dateObj.hasTask} />
               </DateBox>
             ))}
@@ -289,13 +289,31 @@ const DateBox = styled.div`
   color: ${({ type }) =>
     type === "prev" || type === "next" ? "#B3B3B3" : "#000"};
   position: relative;
-  background: ${({ type, isToday }) =>
-    type === "current" && isToday ? "var(--key_purple, #aa91e8)" : "none"};
-  border-radius: ${({ type, isToday }) =>
-    type === "current" && isToday ? "100%" : "none"};
-  color: ${({ type, isToday }) =>
-    type === "current" && isToday ? "white" : "inherit"};
-  opacity: ${({ type }) => (type === "prev" || type === "next" ? 0.3 : 1)};
+
+  ${({ isToday }) =>
+    isToday &&
+    `
+    &::before {
+      content: '';
+      color: var(--white, #F2F2F2);
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background-color: var(--key_purple, #aa91e8);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0; 
+    }
+  `}
+
+  span {
+    position: relative;
+    z-index: 5;
+    color: ${({ isToday }) => (isToday ? "white" : "inherit")};
+  }
+
   & > .task-indicator {
     width: 7px;
     height: 7px;
@@ -304,19 +322,6 @@ const DateBox = styled.div`
     margin-top: 10px;
     position: absolute;
     top: 20px;
-  }
-
-  &::before > .today-indicator {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 32px; // 고정된 원의 너비
-    height: 32px; // 고정된 원의 높이
-    background-color: #aa91e8;
-    border-radius: 50%;
-    z-index: -1;
   }
 `;
 
